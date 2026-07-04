@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint*)",
+      "Bash(npm run test:unit*)",
+      "Bash(npm install*)",
+      "Bash(node -v)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git checkout*)",
+      "Bash(git stash*)",
+      "Bash(git push*)",
+      "Bash(gh issue *)",
+      "Bash(gh pr *)",
+      "Bash(gh auth status)"
+    ]
+  }
+}
