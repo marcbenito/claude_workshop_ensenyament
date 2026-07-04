@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { PROFESSORS } from "@/lib/data/professors";
 import { capitalizeFirst, cn } from "@/lib/utils";
 
 describe("cn", () => {
@@ -16,15 +15,5 @@ describe("cn", () => {
 describe("capitalizeFirst", () => {
   it("pone en mayúscula solo la primera letra", () => {
     expect(capitalizeFirst("lunes")).toBe("Lunes");
-  });
-});
-
-describe("PROFESSORS", () => {
-  it("todos los profesores tienen id, nombre e iniciales", () => {
-    for (const professor of PROFESSORS) {
-      expect(professor.id).toBeTruthy();
-      expect(professor.name).toBeTruthy();
-      expect(professor.initials).toHaveLength(2);
-    }
   });
 });

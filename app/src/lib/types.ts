@@ -1,38 +1,50 @@
 /**
- * Tipos de dominio del sistema de reservas.
+ * Tipus de domini del sistema de reserva de sessions de treball.
  *
- * Nota: por ahora la persistencia es falsa (mock en localStorage). Estos tipos
- * están pensados para mapear de forma directa a tablas de Supabase en el futuro.
+ * Model alineat amb l'esquema de la BD Postgres (`bd/01_schema.sql`). Tots els
+ * ids són `string` (node-postgres retorna `bigint`/`int8` com a string). Per
+ * exemple, `professorId` és l'id de BD com a string (`"1"`, no `"prof-1"`).
  */
 
-export interface User {
+/** Usuari exposat a la UI: mai porta credencials. */
+export interface PublicUser {
   id: string;
   name: string;
   email: string;
-  /** Solo para el mock — NO hacer esto con una BD real. */
-  password: string;
   createdAt: string;
 }
 
-/** Usuario expuesto a la UI (sin credenciales). */
-export type PublicUser = Omit<User, "password">;
+/**
+ * Usuari complet tal com viu al servidor, amb `passwordHash`. Mai s'ha
+ * d'exposar a components client ni a respostes d'API.
+ */
+export interface ServerUser extends PublicUser {
+  passwordHash: string;
+}
 
 export interface Professor {
   id: string;
   name: string;
   subject: string;
-  /** Iniciales para el avatar. */
+  /** Inicials per a l'avatar. */
   initials: string;
   bio: string;
+}
+
+export interface TimeSlot {
+  id: string;
+  /** Hora en format `HH:mm`. */
+  time: string;
 }
 
 export interface Reservation {
   id: string;
   userId: string;
+  /** Id del professor a la BD, com a string (p. ex. `"1"`). */
   professorId: string;
-  /** Fecha en formato ISO `yyyy-MM-dd`. */
+  /** Data en format ISO `yyyy-MM-dd`. */
   date: string;
-  /** Hora en formato `HH:mm`. */
+  /** Hora en format `HH:mm`. */
   time: string;
   createdAt: string;
   status: "confirmed" | "cancelled";

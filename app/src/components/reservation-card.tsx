@@ -1,11 +1,10 @@
 "use client";
 
 import { format, parseISO } from "date-fns";
-import { es } from "date-fns/locale";
+import { ca } from "date-fns/locale";
 import { CalendarDays, Clock, Trash2 } from "lucide-react";
 
-import type { Reservation } from "@/lib/types";
-import { getProfessorById } from "@/lib/data/professors";
+import type { Professor, Reservation } from "@/lib/types";
 import { capitalizeFirst } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,16 +13,17 @@ import { Badge } from "@/components/ui/badge";
 
 interface ReservationCardProps {
   reservation: Reservation;
+  professor: Professor | undefined;
   onCancel: (id: string) => void;
 }
 
 export function ReservationCard({
   reservation,
+  professor,
   onCancel,
 }: ReservationCardProps) {
-  const professor = getProfessorById(reservation.professorId);
   const dateLabel = capitalizeFirst(
-    format(parseISO(reservation.date), "EEEE d 'de' MMMM", { locale: es })
+    format(parseISO(reservation.date), "EEEE d 'de' MMMM", { locale: ca })
   );
 
   return (
@@ -36,7 +36,7 @@ export function ReservationCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <p className="truncate font-medium">
-              {professor?.name ?? "Profesor"}
+              {professor?.name ?? "Professor"}
             </p>
             <Badge variant="success">Confirmada</Badge>
           </div>
@@ -58,7 +58,7 @@ export function ReservationCard({
         <Button
           variant="ghost"
           size="icon"
-          aria-label="Cancelar reserva"
+          aria-label="Cancel·lar reserva"
           onClick={() => onCancel(reservation.id)}
           className="text-muted-foreground hover:text-destructive"
         >
