@@ -9,15 +9,14 @@ import {
   parse,
   startOfDay,
 } from "date-fns";
-import { es } from "date-fns/locale";
+import { ca } from "date-fns/locale";
 import { ArrowLeft, CalendarDays, Check, Clock, Loader2 } from "lucide-react";
 
-import { useAuth } from "@/lib/auth-context";
-import { PROFESSORS } from "@/lib/data/professors";
-import { TIME_SLOTS } from "@/lib/data/slots";
+import type { Professor, TimeSlot } from "@/lib/types";
 import { createReservation } from "@/lib/services/reservations";
+import { listAvailableProfessors } from "@/lib/services/professors";
+import { listTimeSlots } from "@/lib/services/timeslots";
 import { capitalizeFirst, cn } from "@/lib/utils";
-import { ProtectedRoute } from "@/components/protected-route";
 import { SiteHeader } from "@/components/site-header";
 import { Stepper } from "@/components/reservar/stepper";
 import { ProfessorCard } from "@/components/reservar/professor-card";
@@ -31,7 +30,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const STEPS = ["Día", "Hora", "Profesor"];
+const STEPS = ["Dia", "Hora", "Professor"];
 
 function isSlotPast(date: Date, time: string): boolean {
   if (!isToday(date)) return false;
@@ -40,7 +39,6 @@ function isSlotPast(date: Date, time: string): boolean {
 }
 
 function ReservarContent() {
-  const { user } = useAuth();
   const router = useRouter();
 
   const [step, setStep] = React.useState(0);
@@ -49,6 +47,27 @@ function ReservarContent() {
   const [professorId, setProfessorId] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+
+  const [timeSlots, setTimeSlots] = React.useState<TimeSlot[]>([]);
+  const [loadingSlots, setLoadingSlots] = React.useState(true);
+
+  const [professors, setProfessors] = React.useState<Professor[]>([]);
+  const [loadingProfessors, setLoadingProfessors] = React.useState(false);
+
+  React.useEffect(() => {
+    listTimeSlots()
+      .then(setTimeSlots)
+      .finally(() => setLoadingSlots(false));
+  }, []);
+
+  React.useEffect(() => {
+    if (step !== 2 || !date || !time) return;
+    setLoadingProfessors(true);
+    setProfessorId(undefined);
+    listAvailableProfessors(format(date, "yyyy-MM-dd"), time)
+      .then(setProfessors)
+      .finally(() => setLoadingProfessors(false));
+  }, [step, date, time]);
 
   function handleSelectDate(d: Date) {
     setDate(d);
@@ -61,13 +80,12 @@ function ReservarContent() {
     setStep(2);
   }
 
-  function handleConfirm() {
-    if (!user || !date || !time || !professorId) return;
+  async function handleConfirm() {
+    if (!date || !time || !professorId) return;
     setSubmitting(true);
     setError(null);
 
-    const result = createReservation({
-      userId: user.id,
+    const result = await createReservation({
       professorId,
       date: format(date, "yyyy-MM-dd"),
       time,
@@ -82,7 +100,7 @@ function ReservarContent() {
   }
 
   const dateLabel = date
-    ? capitalizeFirst(format(date, "EEEE d 'de' MMMM", { locale: es }))
+    ? capitalizeFirst(format(date, "EEEE d 'de' MMMM", { locale: ca }))
     : null;
 
   return (
@@ -98,11 +116,11 @@ function ReservarContent() {
             onClick={() => router.push("/dashboard")}
           >
             <ArrowLeft className="h-4 w-4" />
-            Volver
+            Tornar
           </Button>
-          <h1 className="text-2xl font-bold tracking-tight">Nueva reserva</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Nova reserva</h1>
           <p className="text-sm text-muted-foreground">
-            Elige el día, la hora y el profesor para tu sesión.
+            Tria el dia, l&apos;hora i el professor per a la teva sessió.
           </p>
         </div>
 
@@ -132,9 +150,9 @@ function ReservarContent() {
         {step === 0 && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Selecciona el día</CardTitle>
+              <CardTitle className="text-lg">Selecciona el dia</CardTitle>
               <CardDescription>
-                Elige una fecha disponible para tu sesión.
+                Tria una data disponible per a la teva sessió.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -151,43 +169,49 @@ function ReservarContent() {
         {step === 1 && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Selecciona la hora</CardTitle>
+              <CardTitle className="text-lg">Selecciona l&apos;hora</CardTitle>
               <CardDescription>
-                Franjas disponibles para el día elegido.
+                Franges disponibles per al dia triat.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                {TIME_SLOTS.map((slot) => {
-                  const past = date ? isSlotPast(date, slot) : false;
-                  const selected = time === slot;
-                  return (
-                    <button
-                      key={slot}
-                      type="button"
-                      disabled={past}
-                      onClick={() => handleSelectTime(slot)}
-                      className={cn(
-                        "flex h-10 items-center justify-center rounded-md border text-sm font-medium transition-colors",
-                        "hover:bg-accent hover:text-accent-foreground",
-                        selected &&
-                          "border-primary bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
-                        past &&
-                          "pointer-events-none text-muted-foreground/40 line-through"
-                      )}
-                    >
-                      {slot}
-                    </button>
-                  );
-                })}
-              </div>
+              {loadingSlots ? (
+                <div className="flex items-center justify-center py-6">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                  {timeSlots.map((slot) => {
+                    const past = date ? isSlotPast(date, slot.time) : false;
+                    const selected = time === slot.time;
+                    return (
+                      <button
+                        key={slot.id}
+                        type="button"
+                        disabled={past}
+                        onClick={() => handleSelectTime(slot.time)}
+                        className={cn(
+                          "flex h-10 items-center justify-center rounded-md border text-sm font-medium transition-colors",
+                          "hover:bg-accent hover:text-accent-foreground",
+                          selected &&
+                            "border-primary bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
+                          past &&
+                            "pointer-events-none text-muted-foreground/40 line-through"
+                        )}
+                      >
+                        {slot.time}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
               <Button
                 variant="outline"
                 onClick={() => setStep(0)}
                 className="w-full sm:w-auto"
               >
                 <ArrowLeft className="h-4 w-4" />
-                Cambiar día
+                Canviar dia
               </Button>
             </CardContent>
           </Card>
@@ -198,23 +222,33 @@ function ReservarContent() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">
-                Profesores disponibles
+                Professors disponibles
               </CardTitle>
               <CardDescription>
-                Todos disponibles el {dateLabel} a las {time}.
+                Disponibles el {dateLabel} a les {time}.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="space-y-2">
-                {PROFESSORS.map((professor) => (
-                  <ProfessorCard
-                    key={professor.id}
-                    professor={professor}
-                    selected={professorId === professor.id}
-                    onSelect={setProfessorId}
-                  />
-                ))}
-              </div>
+              {loadingProfessors ? (
+                <div className="flex items-center justify-center py-6">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : professors.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  No queda cap professor disponible en aquesta franja.
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {professors.map((professor) => (
+                    <ProfessorCard
+                      key={professor.id}
+                      professor={professor}
+                      selected={professorId === professor.id}
+                      onSelect={setProfessorId}
+                    />
+                  ))}
+                </div>
+              )}
 
               {error && (
                 <p className="text-sm font-medium text-destructive">{error}</p>
@@ -223,7 +257,7 @@ function ReservarContent() {
               <div className="flex flex-col gap-2 sm:flex-row sm:justify-between">
                 <Button variant="outline" onClick={() => setStep(1)}>
                   <ArrowLeft className="h-4 w-4" />
-                  Cambiar hora
+                  Canviar hora
                 </Button>
                 <Button
                   onClick={handleConfirm}
@@ -246,9 +280,5 @@ function ReservarContent() {
 }
 
 export default function ReservarPage() {
-  return (
-    <ProtectedRoute>
-      <ReservarContent />
-    </ProtectedRoute>
-  );
+  return <ReservarContent />;
 }

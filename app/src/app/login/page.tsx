@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CalendarDays, Loader2 } from "lucide-react";
 
-import { useAuth } from "@/lib/auth-context";
+import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
-  const { user, loading: authLoading, login } = useAuth();
+  const { status } = useSession();
   const router = useRouter();
 
   const [email, setEmail] = React.useState("");
@@ -29,21 +29,27 @@ export default function LoginPage() {
 
   // Si ya hay sesión, fuera de aquí.
   React.useEffect(() => {
-    if (!authLoading && user) router.replace("/dashboard");
-  }, [authLoading, user, router]);
+    if (status === "authenticated") router.replace("/dashboard");
+  }, [status, router]);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setSubmitting(true);
 
-    const result = login(email, password);
-    if (result.ok) {
-      router.replace("/dashboard");
-    } else {
-      setError(result.error);
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError("Email o contraseña incorrectos.");
       setSubmitting(false);
+      return;
     }
+
+    router.replace("/dashboard");
   }
 
   return (
