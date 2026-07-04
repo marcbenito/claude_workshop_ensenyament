@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CalendarDays, Loader2 } from "lucide-react";
 
-import { useAuth } from "@/lib/auth-context";
+import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function RegisterPage() {
-  const { user, loading: authLoading, register } = useAuth();
+  const { status } = useSession();
   const router = useRouter();
 
   const [name, setName] = React.useState("");
@@ -30,10 +30,10 @@ export default function RegisterPage() {
   const [submitting, setSubmitting] = React.useState(false);
 
   React.useEffect(() => {
-    if (!authLoading && user) router.replace("/dashboard");
-  }, [authLoading, user, router]);
+    if (status === "authenticated") router.replace("/dashboard");
+  }, [status, router]);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
@@ -47,13 +47,33 @@ export default function RegisterPage() {
     }
 
     setSubmitting(true);
-    const result = register(name, email, password);
-    if (result.ok) {
-      router.replace("/dashboard");
-    } else {
-      setError(result.error);
+
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      setError(data.error ?? "No se ha podido crear la cuenta.");
       setSubmitting(false);
+      return;
     }
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError("Cuenta creada, pero no se ha podido iniciar sesión.");
+      setSubmitting(false);
+      return;
+    }
+
+    router.replace("/dashboard");
   }
 
   return (

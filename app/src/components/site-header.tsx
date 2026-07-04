@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CalendarDays, LogOut } from "lucide-react";
 
-import { useAuth } from "@/lib/auth-context";
+import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
@@ -19,12 +19,13 @@ function initialsOf(name: string): string {
 }
 
 export function SiteHeader() {
-  const { user, logout } = useAuth();
+  const { data: session } = useSession();
   const router = useRouter();
+  const user = session?.user;
 
-  function handleLogout() {
-    logout();
-    router.replace("/login");
+  async function handleLogout() {
+    await signOut({ redirect: false });
+    router.replace("/");
   }
 
   return (
@@ -45,7 +46,7 @@ export function SiteHeader() {
             <div className="hidden items-center gap-2 sm:flex">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="text-xs">
-                  {initialsOf(user.name)}
+                  {initialsOf(user.name ?? "")}
                 </AvatarFallback>
               </Avatar>
               <span className="text-sm font-medium">{user.name}</span>

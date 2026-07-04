@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { AuthProvider } from "@/lib/auth-context";
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "Reserva de Sesiones",
@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="antialiased">
       <body className="min-h-screen bg-muted/30">
-        <AuthProvider>{children}</AuthProvider>
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );
