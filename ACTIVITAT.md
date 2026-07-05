@@ -13,7 +13,9 @@ canvia el comportament de Claude, i fer el primer canvi de codi real.
    Els meus resultats:
    Haiku: https://claude.ai/code/artifact/33257870-aa24-4e1e-8b7a-1d4037fb90e6?via=auto_preview
    Sonet: https://claude.ai/code/artifact/89d13dce-7579-4bca-8ea1-fecba1e9fa3a?via=auto_preview
-   Opus: 
+   Opus: https://claude.ai/code/artifact/80441072-ec5d-4bc3-a37b-18b50ca75a88
+   fable: https://claude.ai/code/artifact/118f7e94-7f39-4d2c-b003-48da44557e0f?via=auto_preview
+
 
 
 2. **Comandes**: prova `/model`, `/cost`, `/clear`, el mode pla (shift+tab) i
@@ -48,3 +50,6 @@ canvia el comportament de Claude, i fer el primer canvi de codi real.
 
 Checkpoint de referència: branca `01-fonaments-final`. Per continuar o
 re-enganxar-te: executa la skill `/next`.
+
+
+

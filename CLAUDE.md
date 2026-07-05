@@ -10,7 +10,9 @@ Sempre contesta en Català
 ## Stack
 
 Next.js 15 (App Router) · TypeScript · Tailwind CSS · components estil shadcn/ui.
-El codi de l'aplicació viu a `app/`.
+El codi de l'aplicació viu a `app/`. BD Postgres
+Components visuals en app/components/ui
+
 
 ## Comandes (IMPORTANT)
 
@@ -42,9 +44,11 @@ acabada, i reporta el resultat.
 
 ## Base de dades
 
-Hi ha una base de dades **Postgres** corporativa configurada a `app/.env`
-(`DATABASE_URL`). L'esquema i les dades inicials són a `bd/`. La capa de serveis
-migrarà a aquesta BD sense tocar la UI.
+El sistema funciona amb una base de dades Postgres.
+L'esquema i les dades inicials són a `bd/`. 
+No pots utilitzar directament psql, en tot cas ho farás per MCP si el tens configurat.
+
+
 
 ## Gestió de professors
 

@@ -52,12 +52,7 @@ Ara que les reserves són reals, fem la disponibilitat real. Volem **invertir el
 flux**: primer es tria el professor, i després es mostren **només els seus buits**.
 
 1. En mode pla:
-   > Vull canviar el flux de reserva. Ara les franges surten fixes. Canvia-ho
-   > perquè primer se seleccioni el professor i la data, i després es mostrin
-   > **només les franges lliures** d'aquell professor per a aquella data (les que
-   > no tinguin ja una reserva confirmada). Afegeix l'endpoint que calgui
-   > (p. ex. `GET /api/professors/[id]/slots?date=…`) seguint el patró dels
-   > endpoints existents, i reordena el stepper de `reservar/`.
+   > Vull canviar el flux de reserva. Ara les franges surten fixes. Canvia-ho perquè primer se seleccioni la data, despres el profesor  i després es mostrin només les franges lliures
 2. Revisa el pla (toca backend + frontend), negocia'l i aprova.
 3. **Verifica**: reserva una franja d'un professor, torna a entrar al flux amb
    aquell professor → aquella franja ja no ha d'aparèixer.
@@ -72,5 +67,5 @@ flux**: primer es tria el professor, i després es mostren **només els seus bui
 
 ## En acabar
 
-Checkpoints de referència: `02-backend` (reserves fetes) i `02-flux` (flux
-invertit). Per continuar o re-enganxar-te: executa la skill `/next`.
+Valida que tot funcioni i.. Recordali que actualitzi la documentació i el CLAUDE.md
+
