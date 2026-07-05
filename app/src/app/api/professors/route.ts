@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { listAll, listAvailable } from "@/lib/server/professors.repo";
+import {
+  listAll,
+  listAvailable,
+  listAvailableOnDate,
+} from "@/lib/server/professors.repo";
 import { idByTime } from "@/lib/server/timeslots.repo";
 
 export async function GET(request: Request) {
@@ -17,6 +21,10 @@ export async function GET(request: Request) {
       );
     }
     return NextResponse.json(await listAvailable(date, slotId));
+  }
+
+  if (date) {
+    return NextResponse.json(await listAvailableOnDate(date));
   }
 
   return NextResponse.json(await listAll());
