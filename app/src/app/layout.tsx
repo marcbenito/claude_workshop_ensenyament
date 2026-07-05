@@ -1,11 +1,25 @@
 import type { Metadata } from "next";
+import { Karla, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 
 import { SessionProvider } from "next-auth/react";
 
+const karla = Karla({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
+});
+
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-serif",
+});
+
 export const metadata: Metadata = {
-  title: "Reserva de Sesiones",
-  description: "Sistema de reserva de sesiones de trabajo con profesores.",
+  title: "Reserva de Sessions de Treball",
+  description:
+    "Reserva sessions 1-a-1 amb els professors i mentors interns del centre.",
 };
 
 export default function RootLayout({
@@ -14,8 +28,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className="antialiased">
-      <body className="min-h-screen bg-muted/30">
+    <html
+      lang="ca"
+      className={`${karla.variable} ${sourceSerif.variable} antialiased`}
+    >
+      <body className="min-h-screen bg-background text-foreground">
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
