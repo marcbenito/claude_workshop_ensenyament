@@ -23,12 +23,9 @@ Postgres), però **desactivat**.
    ```
    Obre `.mcp.json` i comprova que hi ha els **dos servidors** (chrome-devtools
    i postgres) i que cap línia està comentada.
-2. **Instal·la els dos servidors MCP** (es baixen amb `npx`; fes-ho un cop per
-   evitar esperes en directe):
-   ```bash
-   npx -y chrome-devtools-mcp@latest --help >/dev/null
-   npx -y @modelcontextprotocol/server-postgres --help >/dev/null
+
    ```
+   
 3. **Reinicia Claude Code** perquè carregui els servidors. Comprova amb `/mcp`
    que apareixen `chrome-devtools` i `postgres` connectats.
 
@@ -36,12 +33,10 @@ Postgres), però **desactivat**.
 
 ## Pas 1 — Ulls al navegador: rendiment amb Chrome DevTools
 
-1. `git checkout 03-perf` — aquesta branca porta un **problema de rendiment**
-   preparat: l'app va lenta i "ningú sap per què".
-2. Demana-li (pots copiar-ho tal qual):
+1. Demana-li (pots copiar-ho tal qual):
    > L'app va lenta. Obre-la al navegador, mira el rendiment (network, traces,
    > re-renders), troba les causes i arregla-les. Verifica la millora.
-3. Observa com Claude **navega de veritat**, llegeix mètriques reals, arregla i
+2. Observa com Claude **navega de veritat**, llegeix mètriques reals, arregla i
    torna a mesurar. Ara veu el que veu l'usuari.
 
 ---
@@ -59,13 +54,10 @@ Claude consulta la **font de veritat** directament. Fixa't que el rol de la BD
 
 ---
 
-## Verificació final
+## Resum
 
 - `/mcp` mostra `chrome-devtools` i `postgres` connectats.
 - Claude ha diagnosticat i arreglat el problema de rendiment amb el navegador.
 - Claude ha consultat reserves reals directament a la base de dades.
 
-## En acabar
 
-Checkpoint de referència: `03-perf-solucio`. Per continuar o re-enganxar-te:
-executa la skill `/next`.

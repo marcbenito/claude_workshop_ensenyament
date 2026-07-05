@@ -1,33 +1,23 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
-const IMAGENES_STOCK = [
-  "https://picsum.photos/id/1015/400/300",
-  "https://picsum.photos/id/1025/400/300",
-  "https://picsum.photos/id/1035/400/300",
+const IMATGES = [
+  { src: "/img/sessio.svg", alt: "Sessió de treball amb un professor", peu: "Sessions 1-a-1 amb mentors" },
+  { src: "/img/calendari.svg", alt: "Calendari de reserves", peu: "Tria el dia que et va bé" },
+  { src: "/img/franges.svg", alt: "Franges horàries disponibles", peu: "Reserva la franja lliure" },
 ];
 
 export function PromoImages() {
-  const [cargado, setCargado] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.error("Error de test: PromoImages ha tardado a cargar");
-      setCargado(true);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!cargado) {
-    return <p>Cargando imágenes...</p>;
-  }
-
   return (
-    <div className="flex flex-wrap gap-4">
-      {IMAGENES_STOCK.map((src) => (
-        <img key={src} src={src} alt="Imagen promocional de stock" />
+    <div className="grid gap-4 sm:grid-cols-3">
+      {IMATGES.map((img) => (
+        <figure
+          key={img.src}
+          className="overflow-hidden rounded-lg border bg-card"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={img.src} alt={img.alt} className="h-40 w-full object-cover" />
+          <figcaption className="px-4 py-3 text-sm text-muted-foreground">
+            {img.peu}
+          </figcaption>
+        </figure>
       ))}
     </div>
   );

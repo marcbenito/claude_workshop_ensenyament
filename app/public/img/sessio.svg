@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Sessió de treball amb un professor">
+  <rect width="400" height="300" fill="#EEF2FF"/>
+  <rect x="70" y="205" width="260" height="16" rx="4" fill="#C7D2FE"/>
+  <!-- taula -->
+  <rect x="120" y="180" width="160" height="14" rx="3" fill="#6366F1"/>
+  <rect x="150" y="194" width="12" height="30" fill="#4F46E5"/>
+  <rect x="238" y="194" width="12" height="30" fill="#4F46E5"/>
+  <!-- professor -->
+  <circle cx="150" cy="120" r="26" fill="#4F46E5"/>
+  <rect x="126" y="150" width="48" height="34" rx="14" fill="#4F46E5"/>
+  <!-- alumne -->
+  <circle cx="250" cy="120" r="26" fill="#818CF8"/>
+  <rect x="226" y="150" width="48" height="34" rx="14" fill="#818CF8"/>
+  <!-- bafarada de conversa -->
+  <rect x="182" y="70" width="60" height="34" rx="10" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="2"/>
+  <circle cx="200" cy="87" r="3" fill="#6366F1"/>
+  <circle cx="212" cy="87" r="3" fill="#6366F1"/>
+  <circle cx="224" cy="87" r="3" fill="#6366F1"/>
+</svg>
