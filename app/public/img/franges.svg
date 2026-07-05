@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Franges horàries disponibles">
+  <rect width="400" height="300" fill="#FEF3F2"/>
+  <!-- rellotge -->
+  <circle cx="140" cy="150" r="62" fill="#FFFFFF" stroke="#FDA29B" stroke-width="4"/>
+  <circle cx="140" cy="150" r="5" fill="#E11D48"/>
+  <line x1="140" y1="150" x2="140" y2="112" stroke="#E11D48" stroke-width="5" stroke-linecap="round"/>
+  <line x1="140" y1="150" x2="168" y2="150" stroke="#E11D48" stroke-width="5" stroke-linecap="round"/>
+  <!-- llista de franges -->
+  <g>
+    <rect x="230" y="96" width="120" height="30" rx="8" fill="#FFFFFF" stroke="#FECDD3" stroke-width="2"/>
+    <rect x="242" y="106" width="10" height="10" rx="2" fill="#12B76A"/>
+    <rect x="264" y="107" width="60" height="8" rx="4" fill="#FDA4AF"/>
+
+    <rect x="230" y="134" width="120" height="30" rx="8" fill="#FFFFFF" stroke="#FECDD3" stroke-width="2"/>
+    <rect x="242" y="144" width="10" height="10" rx="2" fill="#12B76A"/>
+    <rect x="264" y="145" width="60" height="8" rx="4" fill="#FDA4AF"/>
+
+    <rect x="230" y="172" width="120" height="30" rx="8" fill="#FEE4E2" stroke="#FECDD3" stroke-width="2"/>
+    <rect x="242" y="182" width="10" height="10" rx="2" fill="#F04438"/>
+    <rect x="264" y="183" width="60" height="8" rx="4" fill="#FDA4AF"/>
+  </g>
+</svg>
