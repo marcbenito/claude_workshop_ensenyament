@@ -43,4 +43,21 @@ describe("Stepper", () => {
 
     expect(screen.getAllByRole("listitem")).toHaveLength(steps.length);
   });
+
+  it("marca només com a completat el pas anterior a l'actual quan `current` és intermedi", () => {
+    const { container } = render(<Stepper steps={steps} current={1} />);
+
+    expect(screen.queryByText("1")).not.toBeInTheDocument();
+    expect(screen.getByText("2")).toBeInTheDocument();
+    expect(screen.getByText("3")).toBeInTheDocument();
+    expect(container.querySelectorAll("svg")).toHaveLength(1);
+  });
+
+  it("destaca l'etiqueta del pas actual amb `text-foreground`", () => {
+    render(<Stepper steps={steps} current={1} />);
+
+    expect(screen.getByText("Data i hora")).toHaveClass("text-foreground");
+    expect(screen.getByText("Professor")).toHaveClass("text-muted-foreground");
+    expect(screen.getByText("Confirmació")).toHaveClass("text-muted-foreground");
+  });
 });

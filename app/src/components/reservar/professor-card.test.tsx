@@ -51,4 +51,38 @@ describe("ProfessorCard", () => {
 
     expect(onSelect).toHaveBeenCalledExactlyOnceWith("3");
   });
+
+  it("aplica les classes de ressaltat quan està seleccionat", () => {
+    render(<ProfessorCard professor={professor} selected onSelect={vi.fn()} />);
+
+    expect(screen.getByRole("button")).toHaveClass(
+      "border-primary",
+      "ring-1",
+      "ring-primary"
+    );
+  });
+
+  it("no aplica les classes de ressaltat quan no està seleccionat", () => {
+    render(
+      <ProfessorCard professor={professor} selected={false} onSelect={vi.fn()} />
+    );
+
+    expect(screen.getByRole("button")).not.toHaveClass("border-primary");
+  });
+
+  it("no mostra la icona de check quan no està seleccionat", () => {
+    const { container } = render(
+      <ProfessorCard professor={professor} selected={false} onSelect={vi.fn()} />
+    );
+
+    expect(container.querySelector("svg")).not.toBeInTheDocument();
+  });
+
+  it("mostra la icona de check quan està seleccionat", () => {
+    const { container } = render(
+      <ProfessorCard professor={professor} selected onSelect={vi.fn()} />
+    );
+
+    expect(container.querySelector("svg")).toBeInTheDocument();
+  });
 });
