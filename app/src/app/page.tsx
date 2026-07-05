@@ -56,7 +56,12 @@ export default function HomePage() {
       </section>
 
       <footer className="mt-16 border-t pt-6 text-center text-xs text-muted-foreground">
-        © 2026 Reserva de Sessions de Treball
+        <p>© 2026 Reserva de Sessions de Treball</p>
+        <p className="mt-1">
+          <Link href="/politica-privacitat" className="underline underline-offset-4">
+            Política de privacitat
+          </Link>
+        </p>
       </footer>
     </main>
   );
