@@ -37,3 +37,25 @@ export async function listAvailable(
   );
   return rows.map(mapProfessorRow);
 }
+
+/** Professors amb almenys una franja activa lliure en una data. */
+export async function listAvailableOnDate(date: string): Promise<Professor[]> {
+  const { rows } = await getPool().query(
+    `SELECT p.id, p.name, p.subject, p.initials, p.bio
+     FROM professors p
+     WHERE EXISTS (
+       SELECT 1 FROM time_slots ts
+       WHERE ts.is_active = true
+         AND NOT EXISTS (
+           SELECT 1 FROM reservations r
+           WHERE r.professor_id = p.id
+             AND r.reservation_date = $1
+             AND r.time_slot_id = ts.id
+             AND r.status = 'confirmed'
+         )
+     )
+     ORDER BY p.id`,
+    [date]
+  );
+  return rows.map(mapProfessorRow);
+}

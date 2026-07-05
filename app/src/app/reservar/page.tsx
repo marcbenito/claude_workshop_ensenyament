@@ -10,12 +10,19 @@ import {
   startOfDay,
 } from "date-fns";
 import { ca } from "date-fns/locale";
-import { ArrowLeft, CalendarDays, Check, Clock, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  CalendarDays,
+  Check,
+  Clock,
+  Loader2,
+  User,
+} from "lucide-react";
 
 import type { Professor, TimeSlot } from "@/lib/types";
 import { createReservation } from "@/lib/services/reservations";
-import { listAvailableProfessors } from "@/lib/services/professors";
-import { listTimeSlots } from "@/lib/services/timeslots";
+import { listProfessorsWithAvailability } from "@/lib/services/professors";
+import { listAvailableTimeSlots } from "@/lib/services/timeslots";
 import { capitalizeFirst, cn } from "@/lib/utils";
 import { SiteHeader } from "@/components/site-header";
 import { Stepper } from "@/components/reservar/stepper";
@@ -30,7 +37,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const STEPS = ["Dia", "Hora", "Professor"];
+const STEPS = ["Dia", "Professor", "Hora"];
 
 function isSlotPast(date: Date, time: string): boolean {
   if (!isToday(date)) return false;
@@ -48,36 +55,36 @@ function ReservarContent() {
   const [submitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  const [timeSlots, setTimeSlots] = React.useState<TimeSlot[]>([]);
-  const [loadingSlots, setLoadingSlots] = React.useState(true);
-
   const [professors, setProfessors] = React.useState<Professor[]>([]);
   const [loadingProfessors, setLoadingProfessors] = React.useState(false);
 
-  React.useEffect(() => {
-    listTimeSlots()
-      .then(setTimeSlots)
-      .finally(() => setLoadingSlots(false));
-  }, []);
-
-  React.useEffect(() => {
-    if (step !== 2 || !date || !time) return;
-    setLoadingProfessors(true);
-    setProfessorId(undefined);
-    listAvailableProfessors(format(date, "yyyy-MM-dd"), time)
-      .then(setProfessors)
-      .finally(() => setLoadingProfessors(false));
-  }, [step, date, time]);
+  const [timeSlots, setTimeSlots] = React.useState<TimeSlot[]>([]);
+  const [loadingSlots, setLoadingSlots] = React.useState(false);
 
   function handleSelectDate(d: Date) {
     setDate(d);
+    setProfessorId(undefined);
     setTime(undefined);
     setStep(1);
+    setLoadingProfessors(true);
+    listProfessorsWithAvailability(format(d, "yyyy-MM-dd"))
+      .then(setProfessors)
+      .finally(() => setLoadingProfessors(false));
+  }
+
+  function handleSelectProfessor(id: string) {
+    if (!date) return;
+    setProfessorId(id);
+    setTime(undefined);
+    setStep(2);
+    setLoadingSlots(true);
+    listAvailableTimeSlots(format(date, "yyyy-MM-dd"), id)
+      .then(setTimeSlots)
+      .finally(() => setLoadingSlots(false));
   }
 
   function handleSelectTime(t: string) {
     setTime(t);
-    setStep(2);
   }
 
   async function handleConfirm() {
@@ -101,6 +108,10 @@ function ReservarContent() {
 
   const dateLabel = date
     ? capitalizeFirst(format(date, "EEEE d 'de' MMMM", { locale: ca }))
+    : null;
+
+  const professorLabel = professorId
+    ? professors.find((p) => p.id === professorId)?.name ?? null
     : null;
 
   return (
@@ -129,12 +140,18 @@ function ReservarContent() {
         </div>
 
         {/* Resumen de selección */}
-        {(dateLabel || time) && (
+        {(dateLabel || professorLabel || time) && (
           <div className="mb-4 flex flex-wrap gap-2 text-sm">
             {dateLabel && (
               <span className="flex items-center gap-1.5 rounded-md bg-secondary px-2.5 py-1 font-medium">
                 <CalendarDays className="h-3.5 w-3.5" />
                 {dateLabel}
+              </span>
+            )}
+            {professorLabel && (
+              <span className="flex items-center gap-1.5 rounded-md bg-secondary px-2.5 py-1 font-medium">
+                <User className="h-3.5 w-3.5" />
+                {professorLabel}
               </span>
             )}
             {time && (
@@ -165,13 +182,56 @@ function ReservarContent() {
           </Card>
         )}
 
-        {/* Paso 2: Hora */}
+        {/* Paso 2: Profesor */}
         {step === 1 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Selecciona el professor</CardTitle>
+              <CardDescription>
+                Professors amb disponibilitat el {dateLabel}.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {loadingProfessors ? (
+                <div className="flex items-center justify-center py-6">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : professors.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  Cap professor disponible aquest dia.
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {professors.map((professor) => (
+                    <ProfessorCard
+                      key={professor.id}
+                      professor={professor}
+                      selected={professorId === professor.id}
+                      onSelect={handleSelectProfessor}
+                    />
+                  ))}
+                </div>
+              )}
+
+              <Button
+                variant="outline"
+                onClick={() => setStep(0)}
+                className="w-full sm:w-auto"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Canviar dia
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Paso 3: Hora */}
+        {step === 2 && (
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Selecciona l&apos;hora</CardTitle>
               <CardDescription>
-                Franges disponibles per al dia triat.
+                Franges lliures amb {professorLabel} el {dateLabel}.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -179,6 +239,10 @@ function ReservarContent() {
                 <div className="flex items-center justify-center py-6">
                   <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                 </div>
+              ) : timeSlots.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  No queda cap franja lliure amb aquest professor.
+                </p>
               ) : (
                 <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                   {timeSlots.map((slot) => {
@@ -205,50 +269,6 @@ function ReservarContent() {
                   })}
                 </div>
               )}
-              <Button
-                variant="outline"
-                onClick={() => setStep(0)}
-                className="w-full sm:w-auto"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Canviar dia
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Paso 3: Profesor */}
-        {step === 2 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">
-                Professors disponibles
-              </CardTitle>
-              <CardDescription>
-                Disponibles el {dateLabel} a les {time}.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {loadingProfessors ? (
-                <div className="flex items-center justify-center py-6">
-                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-                </div>
-              ) : professors.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  No queda cap professor disponible en aquesta franja.
-                </p>
-              ) : (
-                <div className="space-y-2">
-                  {professors.map((professor) => (
-                    <ProfessorCard
-                      key={professor.id}
-                      professor={professor}
-                      selected={professorId === professor.id}
-                      onSelect={setProfessorId}
-                    />
-                  ))}
-                </div>
-              )}
 
               {error && (
                 <p className="text-sm font-medium text-destructive">{error}</p>
@@ -257,11 +277,11 @@ function ReservarContent() {
               <div className="flex flex-col gap-2 sm:flex-row sm:justify-between">
                 <Button variant="outline" onClick={() => setStep(1)}>
                   <ArrowLeft className="h-4 w-4" />
-                  Canviar hora
+                  Canviar professor
                 </Button>
                 <Button
                   onClick={handleConfirm}
-                  disabled={!professorId || submitting}
+                  disabled={!time || submitting}
                 >
                   {submitting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

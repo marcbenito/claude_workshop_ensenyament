@@ -13,6 +13,28 @@ export async function listActive(): Promise<TimeSlot[]> {
   return rows.map(mapTimeSlotRow);
 }
 
+/** Franges actives lliures per a un professor en una data. */
+export async function listAvailableForProfessor(
+  professorId: string,
+  date: string
+): Promise<TimeSlot[]> {
+  const { rows } = await getPool().query(
+    `SELECT ts.id, ts.slot_time
+     FROM time_slots ts
+     WHERE ts.is_active = true
+       AND NOT EXISTS (
+         SELECT 1 FROM reservations r
+         WHERE r.professor_id = $1
+           AND r.reservation_date = $2
+           AND r.time_slot_id = ts.id
+           AND r.status = 'confirmed'
+       )
+     ORDER BY ts.slot_time`,
+    [professorId, date]
+  );
+  return rows.map(mapTimeSlotRow);
+}
+
 export async function idByTime(time: string): Promise<string | null> {
   const { rows } = await getPool().query(
     `SELECT id FROM time_slots WHERE slot_time = $1`,
