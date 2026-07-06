@@ -383,6 +383,12 @@ export default function HomePage() {
               <a href="#preguntes" className="hover:text-[#faf7f2]">
                 Preguntes
               </a>
+              <Link
+                href="/politica-privacitat"
+                className="hover:text-[#faf7f2]"
+              >
+                Política de privacitat
+              </Link>
             </div>
             <div className="flex flex-col gap-1">
               <span className="font-bold text-[#faf7f2]">Contacte</span>
