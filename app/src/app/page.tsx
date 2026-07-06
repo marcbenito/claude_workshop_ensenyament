@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -180,12 +181,16 @@ export default function HomePage() {
             <span>✓ Gratuït per a l&apos;alumnat</span>
           </div>
         </div>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80&auto=format&fit=crop"
-          alt="Sessió professor–alumne"
-          className="h-[440px] w-full rounded-3xl object-cover"
-        />
+        <div className="relative h-[440px] w-full">
+          <Image
+            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80&auto=format&fit=crop"
+            alt="Sessió professor–alumne"
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="rounded-3xl object-cover"
+          />
+        </div>
       </section>
 
       {/* ---------- Com funciona ---------- */}
@@ -232,10 +237,11 @@ export default function HomePage() {
               key={p.nom}
               className="flex flex-col gap-3.5 rounded-2xl border border-border bg-card p-6 transition-shadow hover:shadow-lg"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={p.foto}
                 alt={p.nom}
+                width={88}
+                height={88}
                 className="h-[88px] w-[88px] rounded-full object-cover"
               />
               <div>
