@@ -1,10 +1,10 @@
-# Activitat — Part 3: Construir i Plan Mode (des de `02-backend-base`)
+# Construir i Plan Mode (des de `activitat-2`)
 
 **Objectiu:** completar el backend de reserves i canviar el flux de reserva,
 tot amb **mode pla** (shift+tab). Aquí no construïm de zero: **estenem un codi
 que ja existeix**, seguint el seu patró.
 **Temps:** ~40 min.
-**On:** `git checkout 02-backend-base` i arrenca `claude` a l'arrel.
+**On:** `git checkout activitat-2` i arrenca `claude` a l'arrel.
 
 ## D'on venim
 
@@ -29,18 +29,9 @@ teva feina és completar-la, seguint el patró que la migració ja ha deixat.
 2. Canvia de model i activa el mode pla: `/model opus`, després **shift+tab**.
 3. Demana-li (pots copiar-ho tal qual):
    > Les reserves de l'app fallen: el servei `app/src/lib/services/reservations.ts`
-   > crida `/api/reservations` però aquests route handlers no existeixen. El
-   > repositori ja està fet a `app/src/lib/server/reservations.repo.ts` i els
-   > altres endpoints (professors, franges) segueixen un patró clar a
-   > `app/src/app/api/`. Seguint **exactament el mateix patró**, crea els dos
-   > route handlers que falten:
-   > - `app/src/app/api/reservations/route.ts`: `GET` (les meves reserves) i
-   >   `POST` (crear; si la franja ja està ocupada → 409).
-   > - `app/src/app/api/reservations/[id]/route.ts`: `DELETE` (cancel·lar).
-   > Usa el repositori existent. No toquis res més ni escriguis tests.
-4. **Revisa el pla** abans d'aprovar-lo: ha de ser curt (2 fitxers) i calcat al
-   patró de `api/professors`. Negocia'l si cal, i aprova.
-5. **Verifica**: crea una reserva des de l'app → ara funciona i es desa a la BD.
+   > crida `/api/reservations` però aquests route handlers no existeixen. Implementa els endpoints
+
+4. **Verifica**: crea una reserva des de l'app → ara funciona i es desa a la BD.
    Prova de reservar una franja que un company ja hagi agafat → hauries de rebre
    un error de conflicte (409).
 

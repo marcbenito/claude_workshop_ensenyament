@@ -8,7 +8,9 @@ canvia el comportament de Claude, i fer el primer canvi de codi real.
 ## Passos
 
 1. **Trencagel** (sense tocar res):
-   > Explica'm com funciona la capa de serveis d'aquesta app i per què està aïllada de la UI.
+   > Explica'm que veus en aquest repositori
+   o: 
+   > Fesme un resum explicant la arquitectura d'aquest projecte, crea un artefacte
 
    Els meus resultats:
    Haiku: https://claude.ai/code/artifact/33257870-aa24-4e1e-8b7a-1d4037fb90e6?via=auto_preview
@@ -27,17 +29,27 @@ canvia el comportament de Claude, i fer el primer canvi de codi real.
    Fixa't **on** fa el canvi. No avancis fins que l'instructor ho comenti.
 4. **Activa el context del projecte**: aquest repo ja porta un `CLAUDE.md`
    professional preparat, però desactivat. Activa'l:
-   ```bash
-   mv docs/informacion-extra.ts CLAUDE.md
-   ```
-   Reinicia Claude Code (o fes `/clear`) perquè el llegeixi.
-5. **Repeteix l'encàrrec del pas 3** (mateix prompt) i compara el comportament
-   amb abans.
-6. **Explora el context**: obre el `CLAUDE.md` i mira el PRD que referencia
+
+   >Crea un CLAUDE.md amb el fitxer docs/informacion-extra.ts
+
+5. Reinicia Claude Code (o fes `/clear`) perquè el llegeixi.
+
+6. **Repeteix l'encàrrec del pas 3** (mateix prompt) i compara el comportament
+   amb abans:
+   > Esborra el professor David Ortega de l'aplicació.
+
+7. **Explora el context**: obre el `CLAUDE.md` i mira el PRD que referencia
    (`@docs/prd.md`). Entén què li estàs donant a Claude.
-7. **Primera feature** (mode pla, amb el model que et toqui — `/model`):
+
+
+8. **Primera feature** (mode pla, amb el model que et toqui — `/model`):
    > Afegeix al dashboard un filtre per professor a la llista de reserves. Fes servir els components ui/ existents.
-8. Compara amb els companys: temps, qualitat i `/cost`.
+
+9. Compara amb els companys: temps, qualitat i `/cost`.
+
+
+9. Utilitzant el mode plan.
+   > Actualment l'aplicació utilitza localStorage com a backend. Volem implementar un backend utilitzant  una API. Fes l'Analisi i prepara un pla d'implementació per fases. Guardaho a tasques. Pregunta'm els dubtes que tinguis
 
 ## Verificació
 
@@ -47,7 +59,7 @@ canvia el comportament de Claude, i fer el primer canvi de codi real.
 - `cd app && npm run lint` en verd.
 
 ## En acabar
-
+ 
 Checkpoint de referència: branca `01-fonaments-final`. Per continuar o
 re-enganxar-te: executa la skill `/next`.
 
