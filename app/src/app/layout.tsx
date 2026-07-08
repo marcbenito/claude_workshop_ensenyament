@@ -4,6 +4,8 @@ import "./globals.css";
 
 import { SessionProvider } from "next-auth/react";
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 const karla = Karla({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -31,9 +33,17 @@ export default function RootLayout({
     <html
       lang="ca"
       className={`${karla.variable} ${sourceSerif.variable} antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-screen bg-background text-foreground">
-        <SessionProvider>{children}</SessionProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SessionProvider>{children}</SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
