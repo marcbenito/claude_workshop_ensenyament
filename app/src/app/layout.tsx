@@ -4,6 +4,8 @@ import "./globals.css";
 
 import { SessionProvider } from "next-auth/react";
 
+import { CookieBanner } from "@/components/cookie-banner";
+
 const karla = Karla({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -34,6 +36,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-background text-foreground">
         <SessionProvider>{children}</SessionProvider>
+        <CookieBanner />
       </body>
     </html>
   );
