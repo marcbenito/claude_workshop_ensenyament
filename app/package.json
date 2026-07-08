@@ -12,6 +12,7 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.1",
     "@types/pg": "^8.20.0",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -28,6 +29,7 @@
     "@eslint/eslintrc": "^3.3.5",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

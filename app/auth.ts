@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 import { authConfig } from "./auth.config";
-import { findByEmail } from "@/lib/server/users.repo";
+import { findByEmail, verifyPassword } from "@/lib/server/users.repo";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -21,8 +21,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!email || !password) return null;
 
         const user = await findByEmail(email);
-        // TODO: bcrypt — comparació en pla, decisió temporal (BD efímera de proves).
-        if (!user || user.passwordHash !== password) return null;
+        if (!user || !(await verifyPassword(user, password))) return null;
 
         return { id: user.id, name: user.name, email: user.email };
       },
