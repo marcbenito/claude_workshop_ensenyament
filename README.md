@@ -44,6 +44,23 @@ I fes servir les skills del curs:
 Cada estadi del curs és una **branca** de checkpoint. Si una demo falla o et
 perds, sempre pots saltar a la branca corresponent i continuar.
 
+## Desplegament a Vercel
+
+El codi de l'app viu a `app/`, **no** a l'arrel del repo. Si Vercel construeix
+des de l'arrel no troba el `package.json` i serveix un **404 NOT_FOUND**. Per
+evitar-ho:
+
+1. Al projecte de Vercel → **Settings → Build & Deployment → Root Directory**,
+   posa-hi **`app`**. Amb això Vercel detecta Next.js i llegeix `app/vercel.json`.
+2. Afegeix les variables d'entorn (**Settings → Environment Variables**):
+   - `DATABASE_URL` — la cadena de connexió a Postgres.
+   - `AUTH_SECRET` — genera'l amb `npx auth secret` (obligatori en producció).
+   - `NEXT_PUBLIC_SITE_URL` *(opcional)* — l'URL pública (SEO).
+
+> Nota: no s'afegeix un `vercel.json` a l'arrel perquè, en ser una app amb SSR i
+> rutes d'API, cal que Vercel detecti el framework Next.js dins de `app/`; això
+> només s'aconsegueix amb el *Root Directory*, no amb un build des de l'arrel.
+
 ---
 
 *App de demostració per a formació. La base de dades és de proves i efímera;
