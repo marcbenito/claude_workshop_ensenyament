@@ -49,7 +49,12 @@ function DashboardContent() {
   }, [refresh]);
 
   async function handleCancel(id: string) {
-    await cancelReservation(id);
+    const result = await cancelReservation(id);
+    if (!result.ok) {
+      setError(result.error);
+      return;
+    }
+    setError(null);
     await refresh();
   }
 

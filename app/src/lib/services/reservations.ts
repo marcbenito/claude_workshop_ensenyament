@@ -34,10 +34,25 @@ export async function createReservation(input: {
   return { ok: true, reservation: data };
 }
 
-/** Cancel·la una reserva de l'usuari de la sessió. */
-export async function cancelReservation(id: string): Promise<void> {
-  await fetch(`/api/reservations/${id}`, {
+/**
+ * Cancel·la una reserva de l'usuari de la sessió.
+ *
+ * Pot fallar si es fa amb menys de 12 h d'antelació (regla de negoci): en aquest
+ * cas retorna `{ ok: false }` amb el missatge d'error del servidor.
+ */
+export async function cancelReservation(
+  id: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const res = await fetch(`/api/reservations/${id}`, {
     method: "DELETE",
     credentials: "same-origin",
   });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    return {
+      ok: false,
+      error: data.error ?? "No s'ha pogut cancel·lar la reserva.",
+    };
+  }
+  return { ok: true };
 }

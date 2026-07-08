@@ -15,9 +15,12 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  const done = await cancel(userId, id);
-  if (!done) {
-    return NextResponse.json({ error: "Reserva no trobada." }, { status: 404 });
+  const result = await cancel(userId, id);
+  if (!result.ok) {
+    return NextResponse.json(
+      { error: result.error },
+      { status: result.status }
+    );
   }
 
   return NextResponse.json({ ok: true });

@@ -90,14 +90,53 @@ export async function create(input: {
   }
 }
 
-/** Cancel·la (marca `status='cancelled'`) una reserva, només si és de l'usuari. */
-export async function cancel(userId: string, id: string): Promise<boolean> {
+export type CancelReservationResult =
+  | { ok: true }
+  | { ok: false; error: string; status: number };
+
+/**
+ * Cancel·la (marca `status='cancelled'`) una reserva de l'usuari.
+ *
+ * Regla de negoci (FAQ): només es pot cancel·lar fins a **12 h abans** de
+ * l'inici de la sessió. En marcar-la com a cancel·lada, el buit torna a quedar
+ * lliure automàticament (la disponibilitat filtra per `status='confirmed'`).
+ */
+export async function cancel(
+  userId: string,
+  id: string
+): Promise<CancelReservationResult> {
+  // Comprova existència i l'antelació de 12 h en una sola consulta. La resta
+  // (data + franja) es compara amb `now()` dins de Postgres per evitar
+  // ambigüitats de zona horària.
+  const { rows } = await getPool().query(
+    `SELECT (r.reservation_date + ts.slot_time) > now() + interval '12 hours'
+              AS allowed
+     FROM reservations r
+     JOIN time_slots ts ON ts.id = r.time_slot_id
+     WHERE r.id = $1 AND r.user_id = $2 AND r.status = 'confirmed'`,
+    [id, userId]
+  );
+
+  if (!rows[0]) {
+    return { ok: false, error: "Reserva no trobada.", status: 404 };
+  }
+  if (!rows[0].allowed) {
+    return {
+      ok: false,
+      error: "No es pot cancel·lar amb menys de 12 h d'antelació.",
+      status: 409,
+    };
+  }
+
   const { rowCount } = await getPool().query(
     `UPDATE reservations SET status = 'cancelled'
      WHERE id = $1 AND user_id = $2 AND status = 'confirmed'`,
     [id, userId]
   );
-  return (rowCount ?? 0) > 0;
+  if ((rowCount ?? 0) === 0) {
+    return { ok: false, error: "Reserva no trobada.", status: 404 };
+  }
+  return { ok: true };
 }
 
 function isUniqueViolation(error: unknown): boolean {
