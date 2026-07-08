@@ -139,9 +139,9 @@ export default function HomePage() {
           <a href="#professors" className="hidden hover:text-foreground sm:inline">
             Professors
           </a>
-          <a href="#preguntes" className="hidden hover:text-foreground sm:inline">
+          <Link href="/preguntes" className="hidden hover:text-foreground sm:inline">
             Preguntes
-          </a>
+          </Link>
           <Button asChild className="rounded-full">
             <Link href="/reservar">Reserva ara</Link>
           </Button>
@@ -354,6 +354,14 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+          <div className="mt-8 flex justify-center">
+            <Link
+              href="/preguntes"
+              className="text-sm font-semibold text-primary hover:underline"
+            >
+              Veure les 10 preguntes més habituals →
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -380,9 +388,9 @@ export default function HomePage() {
               <a href="#professors" className="hover:text-[#faf7f2]">
                 Professors
               </a>
-              <a href="#preguntes" className="hover:text-[#faf7f2]">
+              <Link href="/preguntes" className="hover:text-[#faf7f2]">
                 Preguntes
-              </a>
+              </Link>
             </div>
             <div className="flex flex-col gap-1">
               <span className="font-bold text-[#faf7f2]">Contacte</span>

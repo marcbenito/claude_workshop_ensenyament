@@ -70,3 +70,7 @@ la BD corporativa, no al codi.
 ## Commits
 
 Missatges en **format convencional** (`feat:`, `fix:`, `chore:`…) i en català.
+
+
+## README
+No borris mai el README.md IMPORTANT!!
