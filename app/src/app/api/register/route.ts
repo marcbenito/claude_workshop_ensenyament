@@ -1,19 +1,19 @@
 import { NextResponse } from "next/server";
 
 import { create, findByEmail } from "@/lib/server/users.repo";
+import { firstErrorMessage, registerSchema } from "@/lib/validation";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
 
-  const name = String(body?.name ?? "").trim();
-  const email = String(body?.email ?? "")
-    .trim()
-    .toLowerCase();
-  const password = String(body?.password ?? "");
-
-  if (!name || !email || !password) {
-    return NextResponse.json({ error: "Falten dades." }, { status: 400 });
+  const parsed = registerSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: firstErrorMessage(parsed.error) },
+      { status: 400 }
+    );
   }
+  const { name, email, password } = parsed.data;
 
   const existing = await findByEmail(email);
   if (existing) {
