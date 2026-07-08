@@ -99,7 +99,7 @@ function ReservarContent() {
     });
 
     if (result.ok) {
-      router.replace("/dashboard");
+      router.replace("/dashboard?created=1");
     } else {
       setError(result.error);
       setSubmitting(false);

@@ -5,12 +5,14 @@ import Link from "next/link";
 import { CalendarPlus, CalendarX2, Loader2 } from "lucide-react";
 
 import { useSession } from "next-auth/react";
+import { BellRing, CalendarCheck } from "lucide-react";
 import type { Professor, Reservation } from "@/lib/types";
 import {
   cancelReservation,
   listReservations,
 } from "@/lib/services/reservations";
 import { listProfessors } from "@/lib/services/professors";
+import { upcomingReminders } from "@/lib/notifications";
 import { SiteHeader } from "@/components/site-header";
 import { ReservationCard } from "@/components/reservation-card";
 import { Button } from "@/components/ui/button";
@@ -26,6 +28,20 @@ function DashboardContent() {
   );
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [justCreated, setJustCreated] = React.useState(false);
+
+  // Confirmació in-app en tornar de crear una reserva (?created=1).
+  React.useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("created") === "1") {
+      setJustCreated(true);
+      window.history.replaceState(null, "", "/dashboard");
+    }
+  }, []);
+
+  const reminders = React.useMemo(
+    () => upcomingReminders(reservations),
+    [reservations]
+  );
 
   const refresh = React.useCallback(async () => {
     setLoading(true);
@@ -83,6 +99,27 @@ function DashboardContent() {
       <SiteHeader />
 
       <main className="mx-auto max-w-5xl px-4 py-8">
+        {justCreated && (
+          <div className="mb-4 flex items-center gap-3 rounded-lg border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-medium text-primary">
+            <CalendarCheck className="h-5 w-5 shrink-0" />
+            <span>Reserva confirmada! Te l&apos;hem afegit a les teves sessions.</span>
+          </div>
+        )}
+
+        {reminders.length > 0 && (
+          <div className="mb-6 flex flex-col gap-2 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <div className="flex items-center gap-2 font-semibold">
+              <BellRing className="h-5 w-5 shrink-0" />
+              <span>Recordatori de sessions properes</span>
+            </div>
+            <ul className="ml-7 list-disc space-y-0.5">
+              {reminders.map((r) => (
+                <li key={r.reservation.id}>{r.message}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
