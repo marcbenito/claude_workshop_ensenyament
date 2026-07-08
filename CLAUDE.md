@@ -40,7 +40,8 @@ acabada, i reporta el resultat.
   UI** a propòsit: avui és un mock a `localStorage`, demà serà una API real. Mai
   cridis dades directament des dels components; passa sempre per aquí.
 - `app/src/lib/types.ts` — tipus de domini (User, Professor, Reservation).
-- `app/src/lib/data/` — dades de referència (vegeu la política de professors).
+- `app/src/lib/server/` — capa d'accés a la BD (repositoris: `professors.repo.ts`,
+  `reservations.repo.ts`, `users.repo.ts`…).
 
 ## Base de dades
 
@@ -52,11 +53,11 @@ No pots utilitzar directament psql, en tot cas ho farás per MCP si el tens conf
 
 ## Gestió de professors
 
-El catàleg de professors (`app/src/lib/data/professors.ts`) són **dades de
-referència congelades, propietat de l'equip de Dades**, en migració a la taula
-`professors` de la BD. **No editis mai aquest fitxer** (ni afegir, ni esborrar,
-ni modificar). Si et demanen un canvi de professors, explica que s'ha de fer a
-la BD corporativa, no al codi.
+El catàleg de professors viu a la taula `professors` de la BD (migració
+completada; el fitxer de referència `app/src/lib/data/professors.ts` ja no
+existeix). S'hi accedeix només via `app/src/lib/server/professors.repo.ts`. Si
+et demanen afegir, esborrar o modificar professors, és un canvi de **dades a la
+BD corporativa**, no de codi.
 
 ## Convencions
 
