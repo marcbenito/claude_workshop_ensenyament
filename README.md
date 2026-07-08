@@ -30,6 +30,22 @@ npm install
 npm run dev
 ```
 
+### Variables d'entorn
+
+L'app necessita `DATABASE_URL` i `AUTH_SECRET`. Al curs ja venen configurades a
+`app/.env`; per a un entorn nou (o desplegament), copia la plantilla i emplena-la:
+
+```bash
+cd app
+cp .env.example .env
+```
+
+Genera un `AUTH_SECRET` (obligatori en producció amb NextAuth v5) amb:
+
+```bash
+npx auth secret
+```
+
 Després, a l'arrel del repo, arrenca Claude Code:
 
 ```bash
