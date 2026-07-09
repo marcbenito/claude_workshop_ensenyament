@@ -32,6 +32,21 @@ npm run dev
 
 Abre http://localhost:3000. Empieza creando una cuenta en `/register`.
 
+## Variables de entorno
+
+Copia [`.env.example`](.env.example) a `.env` (o `.env.local`) y rellena los
+valores reales:
+
+- `DATABASE_URL` — cadena de conexión a Postgres.
+- `AUTH_SECRET` — secreto que usa `next-auth` (Auth.js v5) para firmar las
+  sesiones. **Obligatorio en producción** (Vercel). Genera uno con:
+
+  ```bash
+  npx auth secret
+  # o bien
+  openssl rand -base64 32
+  ```
+
 ## Estructura
 
 ```
