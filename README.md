@@ -30,6 +30,19 @@ npm install
 npm run dev
 ```
 
+## Desplegament a Vercel
+
+El projecte Next.js viu a la subcarpeta `app/`, no a l'arrel del repo. Perquè
+Vercel el desplegui correctament (i no doni un 404 NOT_FOUND en fer el build des
+de l'arrel), cal indicar-li on és l'app:
+
+- **Opció recomanada (UI de Vercel):** al projecte de Vercel, configura
+  **Settings → General → Root Directory = `app`**.
+- **Alternativa (repo):** el fitxer `vercel.json` de l'arrel ja apunta el build,
+  la instal·lació i la sortida a la subcarpeta `app/`, de manera que el
+  desplegament serveix la home sense 404 encara que el Root Directory quedi a
+  l'arrel.
+
 Després, a l'arrel del repo, arrenca Claude Code:
 
 ```bash
