@@ -3,6 +3,7 @@ import { Karla, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const karla = Karla({
   subsets: ["latin"],
@@ -31,9 +32,12 @@ export default function RootLayout({
     <html
       lang="ca"
       className={`${karla.variable} ${sourceSerif.variable} antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-screen bg-background text-foreground">
-        <SessionProvider>{children}</SessionProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <SessionProvider>{children}</SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 const FAQS = [
@@ -77,6 +78,7 @@ export default function PreguntesPage() {
           <Link href="/preguntes" className="hidden text-foreground sm:inline">
             Preguntes
           </Link>
+          <ThemeToggle />
           <Button asChild className="rounded-full">
             <Link href="/reservar">Reserva ara</Link>
           </Button>

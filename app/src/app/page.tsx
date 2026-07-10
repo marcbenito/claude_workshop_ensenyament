@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 /* Dades de contingut de la landing (marketing). Els professors reals
@@ -142,6 +143,7 @@ export default function HomePage() {
           <Link href="/preguntes" className="hidden hover:text-foreground sm:inline">
             Preguntes
           </Link>
+          <ThemeToggle />
           <Button asChild className="rounded-full">
             <Link href="/reservar">Reserva ara</Link>
           </Button>
