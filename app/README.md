@@ -32,6 +32,17 @@ npm run dev
 
 Abre http://localhost:3000. Empieza creando una cuenta en `/register`.
 
+### Variables d'entorn
+
+Copia `.env.example` a `.env` i omple els valors:
+
+- `DATABASE_URL`: cadena de connexió a la BD Postgres (vegeu `bd/`).
+- `AUTH_SECRET`: secret de NextAuth, obligatori en producció. Genera'n un amb:
+
+  ```bash
+  npx auth secret
+  ```
+
 ## Estructura
 
 ```
