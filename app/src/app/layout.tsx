@@ -4,6 +4,8 @@ import "./globals.css";
 
 import { SessionProvider } from "next-auth/react";
 
+import { siteDescription, siteName, siteUrl } from "@/lib/site";
+
 const karla = Karla({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -17,9 +19,25 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  title: "Reserva de Sessions de Treball",
-  description:
-    "Reserva sessions 1-a-1 amb els professors i mentors interns del centre.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: siteName,
+    template: `%s · ${siteName}`,
+  },
+  description: siteDescription,
+  openGraph: {
+    type: "website",
+    locale: "ca_ES",
+    url: "/",
+    siteName,
+    title: siteName,
+    description: siteDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteName,
+    description: siteDescription,
+  },
 };
 
 export default function RootLayout({
