@@ -32,6 +32,21 @@ npm run dev
 
 Abre http://localhost:3000. Empieza creando una cuenta en `/register`.
 
+## Variables de entorno
+
+Copia `.env.example` a `.env.local` y rellena los valores:
+
+- `DATABASE_URL`: cadena de conexión a Postgres.
+- `AUTH_SECRET`: secreto de `next-auth` v5 (Auth.js), **obligatorio en
+  producción**. Genéralo con:
+
+```bash
+npx auth secret
+```
+
+Nunca subas secretos reales al repositorio; `.env.example` solo contiene
+valores de ejemplo.
+
 ## Estructura
 
 ```
