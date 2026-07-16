@@ -44,6 +44,38 @@ I fes servir les skills del curs:
 Cada estadi del curs és una **branca** de checkpoint. Si una demo falla o et
 perds, sempre pots saltar a la branca corresponent i continuar.
 
+## Desplegament a Vercel
+
+L'app Next.js viu al subdirectori `app/` (no hi ha `package.json` a l'arrel del
+repo). Si Vercel fa el build des de l'arrel, el desplegament acaba en un
+**404 NOT_FOUND**. Hi ha dues maneres de solucionar-ho:
+
+1. **Opció recomanada — Root Directory al dashboard de Vercel.**
+   A *Project → Settings → Build and Deployment → Root Directory*, posa-hi
+   **`app`** i redesplega. Amb això Vercel detecta el projecte Next.js
+   automàticament i no cal cap configuració extra. (Atenció: amb aquesta opció,
+   si mai cal un `vercel.json`, Vercel el buscarà dins de `app/`, no a l'arrel.)
+
+2. **Alternativa — `vercel.json` a l'arrel del repo (ja inclòs).**
+   Si no toques el Root Directory (es queda a l'arrel), el fitxer
+   [`vercel.json`](./vercel.json) d'aquest repo ja redirigeix el build cap a
+   `app/`:
+
+   ```json
+   {
+     "framework": "nextjs",
+     "installCommand": "npm install --prefix app",
+     "buildCommand": "npm run build --prefix app",
+     "outputDirectory": "app/.next"
+   }
+   ```
+
+En tots dos casos, recorda definir a Vercel les **variables d'entorn** de l'app
+(les del `.env` de `app/`: connexió a Postgres, secrets d'auth…), o el runtime
+fallarà encara que el build passi.
+
+**Criteri de validació:** el desplegament ha de servir la home (`/`) sense 404.
+
 ---
 
 *App de demostració per a formació. La base de dades és de proves i efímera;
